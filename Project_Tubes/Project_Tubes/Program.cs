@@ -11,7 +11,7 @@ class Program
         {
             Console.Clear();
             Console.WriteLine("==============================================");
-            Console.WriteLine("||                 Florist                   ||");
+            Console.WriteLine("||                 Florist                  ||");
             Console.WriteLine("==============================================");
             Console.WriteLine("Pilih User: ");
             Console.WriteLine("1. Pelanggan");
@@ -120,6 +120,7 @@ class Program
                     Console.WriteLine("4. Hapus Bunga");
                     Console.WriteLine("5. Cari Bunga Berdasarkan ID");
                     Console.WriteLine("6. Filter Berdasarkan Harga");
+                    Console.WriteLine("7. Urutkan Harga");
                     Console.WriteLine("0. Kembali");
                     Console.WriteLine("==============================================");
                     Console.Write("Pilihan: ");
@@ -244,7 +245,7 @@ class Program
                                 {
                                     if (reader_0401.Read())
                                     {
-                                        Console.WriteLine($"ID: {reader_0401["Id"]}, Nama: {reader_0401["Name"]}, Harga: Rp {reader_0401["Price "]}");
+                                        Console.WriteLine($"ID: {reader_0401["Id"]}, Nama: {reader_0401["Name"]}, Harga: Rp {reader_0401["Price"]}");
                                     }
                                     else
                                     {
@@ -280,6 +281,46 @@ class Program
                             Console.WriteLine("Tekan Apapun untuk Kembali..");
                             Console.ReadKey();
                             break;
+
+                        case 7:
+                            Console.WriteLine("\n========== Urutkan Harga ==========");
+                            Console.WriteLine("Pilih urutan harga:");
+                            Console.WriteLine("1. Harga Tertinggi");
+                            Console.WriteLine("2. Harga Terendah");
+                            Console.Write("Pilihan: ");
+                            string sortOption_0401 = Console.ReadLine();
+
+                            string sortQuery_0401 = "";
+                            if (sortOption_0401 == "1")
+                            {
+                                sortQuery_0401 = "SELECT * FROM `flowers-new` ORDER BY Price DESC";
+                            }
+                            else if (sortOption_0401 == "2")
+                            {
+                                sortQuery_0401 = "SELECT * FROM `flowers-new` ORDER BY Price ASC";
+                            }
+                            else
+                            {
+                                Console.WriteLine("Pilihan tidak valid.");
+                                Console.ReadKey();
+                                break;
+                            }
+
+                            using (var command_0401 = new MySqlCommand(sortQuery_0401, connection_0401))
+                            {
+                                using (var reader_0401 = command_0401.ExecuteReader())
+                                {
+                                    Console.WriteLine("\nHasil Urutkan Harga:");
+                                    while (reader_0401.Read())
+                                    {
+                                        Console.WriteLine($"ID: {reader_0401["Id"]}, Nama: {reader_0401["Name"]}, Harga: Rp {reader_0401["Price"]}");
+                                    }
+                                }
+                            }
+                            Console.WriteLine("\nTekan Enter untuk kembali ke menu admin..");
+                            Console.ReadKey();
+                            break;
+
 
                         case 0:
                             Console.WriteLine("\nKembali ke menu sebelumnya..");
@@ -345,7 +386,7 @@ class Program
                     continue;
                 }
 
-                // Check if the flower exists in the database
+                
                 string flowerName_0401 = null;
                 decimal flowerPrice_0401 = 0;
                 using (var command_0401 = new MySqlCommand("SELECT Name, Price FROM `flowers-new` WHERE Id = @id", connection_0401))
@@ -441,8 +482,19 @@ class Program
             {
                 try
                 {
+                    // Validasi Input Tidak Boleh Kosong
+                    if (string.IsNullOrWhiteSpace(customerName_0401) || string.IsNullOrWhiteSpace(customerAddress_0401))
+                    {
+                        throw new Exception("Nama dan alamat pelanggan tidak boleh kosong.");
+                    }
+
                     // Insert Order
                     decimal finalTotalPrice_0401 = cart_0401.Sum(item => item.Subtotal_0401);
+                    if (finalTotalPrice_0401 <= 0)
+                    {
+                        throw new Exception("Total harga pesanan tidak boleh nol atau negatif.");
+                    }
+
                     long orderId_0401;
 
                     using (var command_0401 = new MySqlCommand("INSERT INTO Orders (CustomerName, CustomerAddress, TotalPrice) VALUES (@name, @address, @totalPrice)", connection_0401, transaction_0401))
@@ -453,13 +505,13 @@ class Program
                         command_0401.ExecuteNonQuery();
                     }
 
-                    // Get the last inserted OrderId
+                    
                     using (var command_0401 = new MySqlCommand("SELECT LAST_INSERT_ID()", connection_0401, transaction_0401))
                     {
                         orderId_0401 = Convert.ToInt64(command_0401.ExecuteScalar());
                     }
 
-                    // Insert Order Details
+                    
                     foreach (var item in cart_0401)
                     {
                         using (var command_0401 = new MySqlCommand("INSERT INTO OrderDetails (OrderId, FlowerId, Quantity, Subtotal) VALUES (@orderId, @flowerId, @quantity, @subtotal)", connection_0401, transaction_0401))
@@ -478,13 +530,17 @@ class Program
                     Console.WriteLine("Tekan Apapun untuk Kembali..");
                     Console.ReadKey();
                 }
-                catch (Exception ex)
+                catch (MySqlException ex) // Jika koneksi ke database mati
+                {
+                    transaction_0401.Rollback();
+                    Console.WriteLine($"Kesalahan koneksi ke database: {ex.Message}");
+                }
+                catch (Exception ex) // Validasi input atau error umum
                 {
                     transaction_0401.Rollback();
                     Console.WriteLine($"Terjadi kesalahan: {ex.Message}");
                 }
             }
-            Console.ReadKey();
         }
     }
 }
