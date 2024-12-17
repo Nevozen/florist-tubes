@@ -18,22 +18,22 @@ class Program
             Console.WriteLine("2. Admin");
             Console.WriteLine("0. Exit");
             Console.Write("Pilihan: ");
-            int PilihMenu_Kelompok1_SI4804;
-            if (!int.TryParse(Console.ReadLine(), out PilihMenu_Kelompok1_SI4804)) // Jika pilihan bukan sama dengan angka
+            int PilihMenu_0401;
+            if (!int.TryParse(Console.ReadLine(), out PilihMenu_0401)) // Jika pilihan bukan sama dengan angka
             {
                 Console.WriteLine("Input tidak valid. Masukkan angka.");
                 Console.ReadKey();
                 continue;
             }
-            if (PilihMenu_Kelompok1_SI4804 == 1)
+            if (PilihMenu_0401 == 1)
             {
-                PelangganMenu_Kelompok1_SI4804();
+                PelangganMenu_0401();
             }
-            else if (PilihMenu_Kelompok1_SI4804 == 2)
+            else if (PilihMenu_0401 == 2)
             {
-                AdminMenu_Kelompok1_SI4804();
+                AdminMenu_0401();
             }
-            else if (PilihMenu_Kelompok1_SI4804 == 0)
+            else if (PilihMenu_0401 == 0)
             {
                 break;
             }
@@ -45,38 +45,43 @@ class Program
         }
     }
 
-    private static void AdminMenu_Kelompok1_SI4804()
+    private static void AdminMenu_0401()
     {
-        string connectionString_Kelompok1_SI4804 = "Server=localhost;Database=florist;UserID=root;Password=;";
-        using (var connection_Kelompok1_SI4804 = new MySqlConnection(connectionString_Kelompok1_SI4804))
+        string connectionString_0401 = "Server=localhost;Database=florist;UserID=root;Password=;";
+        using (var connection_0401 = new MySqlConnection(connectionString_0401))
         {
-            connection_Kelompok1_SI4804.Open();
+            connection_0401.Open();
+
+            var adminCredentials_0401 = new (string Username, string Password)[]
+            {
+                ("Zhafir", "48"),
+                ("Radiv", "52"),
+                ("Caesya", "87"),
+                ("Lola", "18"),
+                ("Sabila", "5")
+            };
 
             // Login admin
-            int maxAttempts_Kelompok1_SI4804 = 3;
-            bool isAuthenticated_Kelompok1_SI4804 = false;
+            int maxAttempts_0401 = 3; // 3 kali kesempatan
+            bool isAuthenticated_0401 = false;
 
-            for (int attempt_Kelompok1_SI4804 = 1; attempt_Kelompok1_SI4804 <= maxAttempts_Kelompok1_SI4804; attempt_Kelompok1_SI4804++)
+            for (int attempt_0401 = 1; attempt_0401 <= maxAttempts_0401; attempt_0401++)
             {
                 Console.Clear();
                 Console.WriteLine("==============================================");
                 Console.WriteLine("||              Login Admin                ||");
                 Console.WriteLine("==============================================");
                 Console.Write("Username: ");
-                string username_Kelompok1_SI4804 = Console.ReadLine();
+                string username_0401 = Console.ReadLine();
                 Console.Write("Password: ");
-                string password_Kelompok1_SI4804 = Console.ReadLine();
+                string password_0401 = Console.ReadLine();
 
-                // Cek ke database
-                using (var command_Kelompok1_SI4804 = new MySqlCommand("SELECT COUNT(*) FROM users WHERE Username = @username AND Password = @password", connection_Kelompok1_SI4804))
+                foreach (var credential_0401 in adminCredentials_0401)
                 {
-                    command_Kelompok1_SI4804.Parameters.AddWithValue("@username", username_Kelompok1_SI4804);
-                    command_Kelompok1_SI4804.Parameters.AddWithValue("@password", password_Kelompok1_SI4804);
-
-                    int result_Kelompok1_SI4804 = Convert.ToInt32(command_Kelompok1_SI4804.ExecuteScalar());
-                    if (result_Kelompok1_SI4804 > 0)
+                    if (credential_0401.Username.Equals(username_0401, StringComparison.OrdinalIgnoreCase) &&
+                        credential_0401.Password == password_0401)
                     {
-                        isAuthenticated_Kelompok1_SI4804 = true;
+                        isAuthenticated_0401 = true;
                         Console.WriteLine("\nWelcome, Admin!");
                         Console.WriteLine("Tekan enter untuk melanjutkan..");
                         Console.ReadKey();
@@ -84,23 +89,24 @@ class Program
                     }
                 }
 
-                // Jika login gagal
-                Console.WriteLine($"\nUsername/Password Salah! Percobaan tersisa {maxAttempts_Kelompok1_SI4804 - attempt_Kelompok1_SI4804} kali lagi.");
-                if (attempt_Kelompok1_SI4804 < maxAttempts_Kelompok1_SI4804)
+                if (isAuthenticated_0401)
                 {
-                    Console.WriteLine("Tekan Enter untuk mencoba lagi..");
-                    Console.ReadKey();
+                    break;
                 }
                 else
                 {
-                    Console.WriteLine("\nCoba lagi nanti...");
-                    Console.ReadKey();
-                    return; // Kembali ke menu utama
+                    int attemptsLeft_0401 = maxAttempts_0401 - attempt_0401;
+                    Console.WriteLine($"\nUsername atau Password Salah! {attemptsLeft_0401} Percobaan Lagi.");
+                    if (attempt_0401 < maxAttempts_0401)
+                    {
+                        Console.WriteLine("Tekan enter untuk melanjutkan..");
+                        Console.ReadKey();
+                    }
                 }
             }
 
             // Jika login berhasil, masuk ke menu admin
-            if (isAuthenticated_Kelompok1_SI4804)
+            if (isAuthenticated_0401)
             {
                 while (true)
                 {
@@ -117,22 +123,22 @@ class Program
                     Console.WriteLine("0. Kembali");
                     Console.WriteLine("==============================================");
                     Console.Write("Pilihan: ");
-                    int choice_Kelompok1_SI4804 = int.Parse(Console.ReadLine());
+                    int choice_0401 = int.Parse(Console.ReadLine());
 
-                    if (choice_Kelompok1_SI4804 == 0) break; // Kembali ke menu sebelumnya
+                    if (choice_0401 == 0) break; // Kembali ke menu sebelumnya
 
                     // Pilihan menu admin
-                    switch (choice_Kelompok1_SI4804)
+                    switch (choice_0401)
                     {
                         case 1:
                             Console.WriteLine("\n========== Daftar Stok ==========");
-                            using (var command_Kelompok1_SI4804 = new MySqlCommand("SELECT * FROM `flowers-new`", connection_Kelompok1_SI4804))
+                            using (var command_0401 = new MySqlCommand("SELECT * FROM `flowers-new`", connection_0401))
                             {
-                                using (var reader_Kelompok1_SI4804 = command_Kelompok1_SI4804.ExecuteReader())
+                                using (var reader_0401 = command_0401.ExecuteReader())
                                 {
-                                    while (reader_Kelompok1_SI4804.Read())
+                                    while (reader_0401.Read())
                                     {
-                                        Console.WriteLine($"ID: {reader_Kelompok1_SI4804["Id"]}, Nama: {reader_Kelompok1_SI4804["Name"]}, Harga: Rp {reader_Kelompok1_SI4804["Price"]}");
+                                        Console.WriteLine($"ID: {reader_0401["Id"]}, Nama: {reader_0401["Name"]}, Harga: Rp {reader_0401["Price"]}");
                                     }
                                 }
                             }
@@ -142,19 +148,19 @@ class Program
 
                         case 2:
                             Console.Write("\nMasukkan Nama Bunga: ");
-                            string newName_Kelompok1_SI4804 = Console.ReadLine();
+                            string newName_0401 = Console.ReadLine();
                             Console.Write("Masukkan Harga Bunga: ");
-                            if (!decimal.TryParse(Console.ReadLine(), out decimal newPrice_Kelompok1_SI4804))
+                            if (!decimal.TryParse(Console.ReadLine(), out decimal newPrice_0401))
                             {
                                 Console.WriteLine("Harga tidak valid.");
                                 Console.ReadKey();
                                 break;
                             }
-                            using (var command_Kelompok1_SI4804 = new MySqlCommand("INSERT INTO `flowers-new` (Name, Price) VALUES (@name, @price)", connection_Kelompok1_SI4804))
+                            using (var command_0401 = new MySqlCommand("INSERT INTO `flowers-new` (Name, Price) VALUES (@name, @price)", connection_0401))
                             {
-                                command_Kelompok1_SI4804.Parameters.AddWithValue("@name", newName_Kelompok1_SI4804);
-                                command_Kelompok1_SI4804.Parameters.AddWithValue("@price", newPrice_Kelompok1_SI4804);
-                                command_Kelompok1_SI4804.ExecuteNonQuery();
+                                command_0401.Parameters.AddWithValue("@name", newName_0401);
+                                command_0401.Parameters.AddWithValue("@price", newPrice_0401);
+                                command_0401.ExecuteNonQuery();
                             }
                             Console.WriteLine("\nBunga berhasil ditambahkan!");
                             Console.WriteLine("\nTekan Enter untuk kembali ke menu admin..");
@@ -163,26 +169,26 @@ class Program
 
                         case 3:
                             Console.WriteLine("\n========== Update Harga Bunga ==========");
-                            DisplayAllFlowers_Kelompok1_SI4804(connection_Kelompok1_SI4804);
+                            DisplayAllFlowers_0401(connection_0401);
                             Console.Write("\nMasukkan ID Bunga yang ingin diupdate: ");
-                            if (!int.TryParse(Console.ReadLine(), out int updateId_Kelompok1_SI4804))
+                            if (!int.TryParse(Console.ReadLine(), out int updateId_0401))
                             {
                                 Console.WriteLine("ID tidak valid.");
                                 Console.ReadKey();
                                 break;
                             }
                             Console.Write("Masukkan Harga Baru: ");
-                            if (!decimal.TryParse(Console.ReadLine(), out decimal updatedPrice_Kelompok1_SI4804))
+                            if (!decimal.TryParse(Console.ReadLine(), out decimal updatedPrice_0401))
                             {
                                 Console.WriteLine("Harga tidak valid.");
                                 Console.ReadKey();
                                 break;
                             }
-                            using (var command_Kelompok1_SI4804 = new MySqlCommand("UPDATE `flowers-new` SET Price = @price WHERE Id = @id", connection_Kelompok1_SI4804))
+                            using (var command_0401 = new MySqlCommand("UPDATE `flowers-new` SET Price = @price WHERE Id = @id", connection_0401))
                             {
-                                command_Kelompok1_SI4804.Parameters.AddWithValue("@price", updatedPrice_Kelompok1_SI4804);
-                                command_Kelompok1_SI4804.Parameters.AddWithValue("@id", updateId_Kelompok1_SI4804);
-                                if (command_Kelompok1_SI4804.ExecuteNonQuery() > 0)
+                                command_0401.Parameters.AddWithValue("@price", updatedPrice_0401);
+                                command_0401.Parameters.AddWithValue("@id", updateId_0401);
+                                if (command_0401.ExecuteNonQuery() > 0)
                                 {
                                     Console.WriteLine("\nHarga berhasil diperbarui!");
                                     Console.WriteLine("Tekan Apapun untuk Kembali..");
@@ -198,18 +204,18 @@ class Program
 
                         case 4:
                             Console.WriteLine("\n========== Hapus Bunga ==========");
-                            DisplayAllFlowers_Kelompok1_SI4804(connection_Kelompok1_SI4804);
+                            DisplayAllFlowers_0401(connection_0401);
                             Console.Write("\nMasukkan ID Bunga yang ingin dihapus: ");
-                            if (!int.TryParse(Console.ReadLine(), out int deleteId_Kelompok1_SI4804))
+                            if (!int.TryParse(Console.ReadLine(), out int deleteId_0401))
                             {
                                 Console.WriteLine("ID tidak valid.");
                                 Console.ReadKey();
                                 break;
                             }
-                            using (var command_Kelompok1_SI4804 = new MySqlCommand(" DELETE FROM `flowers-new` WHERE Id = @id", connection_Kelompok1_SI4804))
+                            using (var command_0401 = new MySqlCommand("DELETE FROM `flowers-new` WHERE Id = @id", connection_0401))
                             {
-                                command_Kelompok1_SI4804.Parameters.AddWithValue("@id", deleteId_Kelompok1_SI4804);
-                                if (command_Kelompok1_SI4804.ExecuteNonQuery() > 0)
+                                command_0401.Parameters.AddWithValue("@id", deleteId_0401);
+                                if (command_0401.ExecuteNonQuery() > 0)
                                 {
                                     Console.WriteLine("Bunga berhasil dihapus!");
                                 }
@@ -225,20 +231,20 @@ class Program
                         case 5:
                             Console.WriteLine("\n========== Cari Bunga Berdasarkan ID ==========");
                             Console.Write("\nMasukkan ID Bunga: ");
-                            if (!int.TryParse(Console.ReadLine(), out int searchId_Kelompok1_SI4804))
+                            if (!int.TryParse(Console.ReadLine(), out int searchId_0401))
                             {
                                 Console.WriteLine("ID tidak valid.");
                                 Console.ReadKey();
                                 break;
                             }
-                            using (var command_Kelompok1_SI4804 = new MySqlCommand("SELECT * FROM `flowers-new` WHERE Id = @id", connection_Kelompok1_SI4804))
+                            using (var command_0401 = new MySqlCommand("SELECT * FROM `flowers-new` WHERE Id = @id", connection_0401))
                             {
-                                command_Kelompok1_SI4804.Parameters.AddWithValue("@id", searchId_Kelompok1_SI4804);
-                                using (var reader_Kelompok1_SI4804 = command_Kelompok1_SI4804.ExecuteReader())
+                                command_0401.Parameters.AddWithValue("@id", searchId_0401);
+                                using (var reader_0401 = command_0401.ExecuteReader())
                                 {
-                                    if (reader_Kelompok1_SI4804.Read())
+                                    if (reader_0401.Read())
                                     {
-                                        Console.WriteLine($"ID: {reader_Kelompok1_SI4804["Id"]}, Nama: {reader_Kelompok1_SI4804["Name"]}, Harga: Rp {reader_Kelompok1_SI4804["Price"]}");
+                                        Console.WriteLine($"ID: {reader_0401["Id"]}, Nama: {reader_0401["Name"]}, Harga: Rp {reader_0401["Price "]}");
                                     }
                                     else
                                     {
@@ -253,21 +259,21 @@ class Program
                         case 6:
                             Console.WriteLine("\n========== Filter Berdasarkan Harga ==========");
                             Console.Write("\nMasukkan harga maksimum: ");
-                            if (!decimal.TryParse(Console.ReadLine(), out decimal maxPrice_Kelompok1_SI4804))
+                            if (!decimal.TryParse(Console.ReadLine(), out decimal maxPrice_0401))
                             {
                                 Console.WriteLine("Harga tidak valid.");
                                 Console.ReadKey();
                                 break;
                             }
-                            using (var command_Kelompok1_SI4804 = new MySqlCommand("SELECT * FROM `flowers-new` WHERE Price <= @maxPrice", connection_Kelompok1_SI4804))
+                            using (var command_0401 = new MySqlCommand("SELECT * FROM `flowers-new` WHERE Price <= @maxPrice", connection_0401))
                             {
-                                command_Kelompok1_SI4804.Parameters.AddWithValue("@maxPrice", maxPrice_Kelompok1_SI4804);
-                                using (var reader_Kelompok1_SI4804 = command_Kelompok1_SI4804.ExecuteReader())
+                                command_0401.Parameters.AddWithValue("@maxPrice", maxPrice_0401);
+                                using (var reader_0401 = command_0401.ExecuteReader())
                                 {
                                     Console.WriteLine("\nHasil Filter:");
-                                    while (reader_Kelompok1_SI4804.Read())
+                                    while (reader_0401.Read())
                                     {
-                                        Console.WriteLine($"ID: {reader_Kelompok1_SI4804["Id"]}, Nama: {reader_Kelompok1_SI4804["Name"]}, Harga: Rp {reader_Kelompok1_SI4804["Price"]}");
+                                        Console.WriteLine($"ID: {reader_0401["Id"]}, Nama: {reader_0401["Name"]}, Harga: Rp {reader_0401["Price"]}");
                                     }
                                 }
                             }
@@ -290,49 +296,49 @@ class Program
         }
     }
 
-    private static void DisplayAllFlowers_Kelompok1_SI4804(MySqlConnection connection_Kelompok1_SI4804)
+    private static void DisplayAllFlowers_0401(MySqlConnection connection_0401)
     {
         Console.WriteLine("\n========== Daftar Stok ==========");
-        using (var command_Kelompok1_SI4804 = new MySqlCommand("SELECT * FROM `flowers-new`", connection_Kelompok1_SI4804))
+        using (var command_0401 = new MySqlCommand("SELECT * FROM `flowers-new`", connection_0401))
         {
-            using (var reader_Kelompok1_SI4804 = command_Kelompok1_SI4804.ExecuteReader())
+            using (var reader_0401 = command_0401.ExecuteReader())
             {
-                while (reader_Kelompok1_SI4804.Read())
+                while (reader_0401.Read())
                 {
-                    Console.WriteLine($"ID: {reader_Kelompok1_SI4804["Id"]}, Nama: {reader_Kelompok1_SI4804["Name"]}, Harga: Rp {reader_Kelompok1_SI4804["Price"]}");
+                    Console.WriteLine($"ID: {reader_0401["Id"]}, Nama: {reader_0401["Name"]}, Harga: Rp {reader_0401["Price"]}");
                 }
             }
         }
     }
 
-    private static void PelangganMenu_Kelompok1_SI4804()
+    private static void PelangganMenu_0401()
     {
-        string customerName_Kelompok1_SI4804 = "";
-        string customerAddress_Kelompok1_SI4804 = "";
-        List<(int FlowerId_Kelompok1_SI4804, string FlowerName_Kelompok1_SI4804, int Quantity_Kelompok1_SI4804, decimal Subtotal_Kelompok1_SI4804)> cart_Kelompok1_SI4804 = new List<(int, string, int, decimal)>();
+        string customerName_0401 = "";
+        string customerAddress_0401 = "";
+        List<(int FlowerId_0401, string FlowerName_0401, int Quantity_0401, decimal Subtotal_0401)> cart_0401 = new List<(int, string, int, decimal)>();
 
-        string connectionString_Kelompok1_SI4804 = "Server=localhost;Database=florist;UserID=root;Password=;";
-        using (var connection_Kelompok1_SI4804 = new MySqlConnection(connectionString_Kelompok1_SI4804))
+        string connectionString_0401 = "Server=localhost;Database=florist;UserID=root;Password=;";
+        using (var connection_0401 = new MySqlConnection(connectionString_0401))
         {
-            connection_Kelompok1_SI4804.Open();
+            connection_0401.Open();
             while (true)
             {
                 Console.Clear();
                 Console.WriteLine("========== Daftar Stok ==========");
-                using (var command_Kelompok1_SI4804 = new MySqlCommand("SELECT * FROM `flowers-new`", connection_Kelompok1_SI4804))
+                using (var command_0401 = new MySqlCommand("SELECT * FROM `flowers-new`", connection_0401))
                 {
-                    using (var reader_Kelompok1_SI4804 = command_Kelompok1_SI4804.ExecuteReader())
+                    using (var reader_0401 = command_0401.ExecuteReader())
                     {
-                        while (reader_Kelompok1_SI4804.Read())
+                        while (reader_0401.Read())
                         {
-                            Console.WriteLine($"ID: {reader_Kelompok1_SI4804["Id"]}, Nama: {reader_Kelompok1_SI4804["Name"]}, Harga: Rp {reader_Kelompok1_SI4804["Price"]}");
+                            Console.WriteLine($"ID: {reader_0401["Id"]}, Nama: {reader_0401["Name"]}, Harga: Rp {reader_0401["Price"]}");
                         }
                     }
                 }
 
                 Console.WriteLine("\n========== Tambah Pesanan ==========");
                 Console.Write("Masukkan ID Bunga yang ingin dibeli: ");
-                if (!int.TryParse(Console.ReadLine(), out int flowerId_Kelompok1_SI4804))
+                if (!int.TryParse(Console.ReadLine(), out int flowerId_0401))
                 {
                     Console.WriteLine("ID tidak valid. Tekan Enter untuk mencoba lagi..");
                     Console.ReadKey();
@@ -340,22 +346,22 @@ class Program
                 }
 
                 // Check if the flower exists in the database
-                string flowerName_Kelompok1_SI4804 = null;
-                decimal flowerPrice_Kelompok1_SI4804 = 0;
-                using (var command_Kelompok1_SI4804 = new MySqlCommand("SELECT Name, Price FROM `flowers-new` WHERE Id = @id", connection_Kelompok1_SI4804))
+                string flowerName_0401 = null;
+                decimal flowerPrice_0401 = 0;
+                using (var command_0401 = new MySqlCommand("SELECT Name, Price FROM `flowers-new` WHERE Id = @id", connection_0401))
                 {
-                    command_Kelompok1_SI4804.Parameters.AddWithValue("@id", flowerId_Kelompok1_SI4804);
-                    using (var reader_Kelompok1_SI4804 = command_Kelompok1_SI4804.ExecuteReader())
+                    command_0401.Parameters.AddWithValue("@id", flowerId_0401);
+                    using (var reader_0401 = command_0401.ExecuteReader())
                     {
-                        if (reader_Kelompok1_SI4804.Read())
+                        if (reader_0401.Read())
                         {
-                            flowerName_Kelompok1_SI4804 = reader_Kelompok1_SI4804["Name"].ToString();
-                            flowerPrice_Kelompok1_SI4804 = Convert.ToDecimal(reader_Kelompok1_SI4804["Price"]);
+                            flowerName_0401 = reader_0401["Name"].ToString();
+                            flowerPrice_0401 = Convert.ToDecimal(reader_0401["Price"]);
                         }
                     }
                 }
 
-                if (flowerName_Kelompok1_SI4804 == null)
+                if (flowerName_0401 == null)
                 {
                     Console.WriteLine("ID bunga tidak ditemukan. Tekan Enter untuk mencoba lagi..");
                     Console.ReadKey();
@@ -363,26 +369,26 @@ class Program
                 }
 
                 Console.Write("Masukkan jumlah: ");
-                if (!int.TryParse(Console.ReadLine(), out int quantity_Kelompok1_SI4804) || quantity_Kelompok1_SI4804 <= 0)
+                if (!int.TryParse(Console.ReadLine(), out int quantity_0401) || quantity_0401 <= 0)
                 {
                     Console.WriteLine("Jumlah tidak valid. Tekan Enter untuk mencoba lagi..");
                     Console.ReadKey();
                     continue;
                 }
 
-                decimal subtotal_Kelompok1_SI4804 = flowerPrice_Kelompok1_SI4804 * quantity_Kelompok1_SI4804;
-                cart_Kelompok1_SI4804.Add((flowerId_Kelompok1_SI4804, flowerName_Kelompok1_SI4804, quantity_Kelompok1_SI4804, subtotal_Kelompok1_SI4804));
-                Console.WriteLine($"Bunga {flowerName_Kelompok1_SI4804} sebanyak {quantity_Kelompok1_SI4804} berhasil ditambahkan ke keranjang.");
+                decimal subtotal_0401 = flowerPrice_0401 * quantity_0401;
+                cart_0401.Add((flowerId_0401, flowerName_0401, quantity_0401, subtotal_0401));
+                Console.WriteLine($"Bunga {flowerName_0401} sebanyak {quantity_0401} berhasil ditambahkan ke keranjang.");
 
                 Console.WriteLine("\n========== Keranjang Belanja ==========");
-                foreach (var item in cart_Kelompok1_SI4804)
+                foreach (var item in cart_0401)
                 {
-                    Console.WriteLine($"- {item.FlowerName_Kelompok1_SI4804}, Jumlah: {item.Quantity_Kelompok1_SI4804}, Subtotal: Rp {item.Subtotal_Kelompok1_SI4804}");
+                    Console.WriteLine($"- {item.FlowerName_0401}, Jumlah: {item.Quantity_0401}, Subtotal: Rp {item.Subtotal_0401}");
                 }
 
                 Console.Write("\nIngin menambahkan bunga lain? (y/n): ");
-                string addMore_Kelompok1_SI4804 = Console.ReadLine()?.ToLower();
-                if (addMore_Kelompok1_SI4804 != "y")
+                string addMore_0401 = Console.ReadLine()?.ToLower();
+                if (addMore_0401 != "y")
                 {
                     break;
                 }
@@ -393,23 +399,23 @@ class Program
             {
                 Console.Clear();
                 Console.WriteLine("========== Konfirmasi Keranjang ==========");
-                decimal totalPrice_Kelompok1_SI4804 = 0;
+                decimal totalPrice_0401 = 0;
 
-                foreach (var item in cart_Kelompok1_SI4804)
+                foreach (var item in cart_0401)
                 {
-                    Console.WriteLine($"- {item.FlowerName_Kelompok1_SI4804}, Jumlah: {item.Quantity_Kelompok1_SI4804}, Subtotal: Rp {item.Subtotal_Kelompok1_SI4804}");
-                    totalPrice_Kelompok1_SI4804 += item.Subtotal_Kelompok1_SI4804;
+                    Console.WriteLine($"- {item.FlowerName_0401}, Jumlah: {item.Quantity_0401}, Subtotal: Rp {item.Subtotal_0401}");
+                    totalPrice_0401 += item.Subtotal_0401;
                 }
 
-                Console.WriteLine($"Total Harga: Rp {totalPrice_Kelompok1_SI4804}");
+                Console.WriteLine($"Total Harga: Rp {totalPrice_0401}");
                 Console.Write("\nApakah keranjang sudah sesuai? (y/n): ");
-                string confirmation_Kelompok1_SI4804 = Console.ReadLine()?.ToLower();
+                string confirmation_0401 = Console.ReadLine()?.ToLower();
 
-                if (confirmation_Kelompok1_SI4804 == "y")
+                if (confirmation_0401 == "y")
                 {
                     break; // Lanjut ke detail pemesan
                 }
-                else if (confirmation_Kelompok1_SI4804 == "n")
+                else if (confirmation_0401 == "n")
                 {
                     Console.WriteLine("Silakan perbaiki keranjang.");
                     Console.ReadKey();
@@ -426,47 +432,47 @@ class Program
             Console.Clear();
             Console.WriteLine("========== Detail Pemesan ==========");
             Console.Write("Masukkan Nama Anda: ");
-            customerName_Kelompok1_SI4804 = Console.ReadLine();
+            customerName_0401 = Console.ReadLine();
             Console.Write("Masukkan Alamat Anda: ");
-            customerAddress_Kelompok1_SI4804 = Console.ReadLine();
+            customerAddress_0401 = Console.ReadLine();
 
             // Simpan Pesanan ke Database
-            using (var transaction_Kelompok1_SI4804 = connection_Kelompok1_SI4804.BeginTransaction())
+            using (var transaction_0401 = connection_0401.BeginTransaction())
             {
                 try
                 {
                     // Insert Order
-                    decimal finalTotalPrice_Kelompok1_SI4804 = cart_Kelompok1_SI4804.Sum(item => item.Subtotal_Kelompok1_SI4804);
-                    long orderId_Kelompok1_SI4804;
+                    decimal finalTotalPrice_0401 = cart_0401.Sum(item => item.Subtotal_0401);
+                    long orderId_0401;
 
-                    using (var command_Kelompok1_SI4804 = new MySqlCommand("INSERT INTO Orders (CustomerName, CustomerAddress, TotalPrice) VALUES (@name, @address, @totalPrice)", connection_Kelompok1_SI4804, transaction_Kelompok1_SI4804))
+                    using (var command_0401 = new MySqlCommand("INSERT INTO Orders (CustomerName, CustomerAddress, TotalPrice) VALUES (@name, @address, @totalPrice)", connection_0401, transaction_0401))
                     {
-                        command_Kelompok1_SI4804.Parameters.AddWithValue("@name", customerName_Kelompok1_SI4804);
-                        command_Kelompok1_SI4804.Parameters.AddWithValue("@address", customerAddress_Kelompok1_SI4804);
-                        command_Kelompok1_SI4804.Parameters.AddWithValue("@totalPrice", finalTotalPrice_Kelompok1_SI4804);
-                        command_Kelompok1_SI4804.ExecuteNonQuery();
+                        command_0401.Parameters.AddWithValue("@name", customerName_0401);
+                        command_0401.Parameters.AddWithValue("@address", customerAddress_0401);
+                        command_0401.Parameters.AddWithValue("@totalPrice", finalTotalPrice_0401);
+                        command_0401.ExecuteNonQuery();
                     }
 
                     // Get the last inserted OrderId
-                    using (var command_Kelompok1_SI4804 = new MySqlCommand("SELECT LAST_INSERT_ID()", connection_Kelompok1_SI4804, transaction_Kelompok1_SI4804))
+                    using (var command_0401 = new MySqlCommand("SELECT LAST_INSERT_ID()", connection_0401, transaction_0401))
                     {
-                        orderId_Kelompok1_SI4804 = Convert.ToInt64(command_Kelompok1_SI4804.ExecuteScalar());
+                        orderId_0401 = Convert.ToInt64(command_0401.ExecuteScalar());
                     }
 
                     // Insert Order Details
-                    foreach (var item in cart_Kelompok1_SI4804)
+                    foreach (var item in cart_0401)
                     {
-                        using (var command_Kelompok1_SI4804 = new MySqlCommand("INSERT INTO OrderDetails (OrderId, FlowerId, Quantity, Subtotal) VALUES (@orderId, @flowerId, @quantity, @subtotal)", connection_Kelompok1_SI4804, transaction_Kelompok1_SI4804))
+                        using (var command_0401 = new MySqlCommand("INSERT INTO OrderDetails (OrderId, FlowerId, Quantity, Subtotal) VALUES (@orderId, @flowerId, @quantity, @subtotal)", connection_0401, transaction_0401))
                         {
-                            command_Kelompok1_SI4804.Parameters.AddWithValue("@orderId", orderId_Kelompok1_SI4804);
-                            command_Kelompok1_SI4804.Parameters.AddWithValue("@flowerId", item.FlowerId_Kelompok1_SI4804);
-                            command_Kelompok1_SI4804.Parameters.AddWithValue("@quantity", item.Quantity_Kelompok1_SI4804);
-                            command_Kelompok1_SI4804.Parameters.AddWithValue("@subtotal", item.Subtotal_Kelompok1_SI4804);
-                            command_Kelompok1_SI4804.ExecuteNonQuery();
+                            command_0401.Parameters.AddWithValue("@orderId", orderId_0401);
+                            command_0401.Parameters.AddWithValue("@flowerId", item.FlowerId_0401);
+                            command_0401.Parameters.AddWithValue("@quantity", item.Quantity_0401);
+                            command_0401.Parameters.AddWithValue("@subtotal", item.Subtotal_0401);
+                            command_0401.ExecuteNonQuery();
                         }
                     }
 
-                    transaction_Kelompok1_SI4804.Commit();
+                    transaction_0401.Commit();
                     Console.WriteLine("\nPesanan berhasil dibuat! Terima kasih telah berbelanja.");
                     Console.WriteLine();
                     Console.WriteLine("Tekan Apapun untuk Kembali..");
@@ -474,7 +480,7 @@ class Program
                 }
                 catch (Exception ex)
                 {
-                    transaction_Kelompok1_SI4804.Rollback();
+                    transaction_0401.Rollback();
                     Console.WriteLine($"Terjadi kesalahan: {ex.Message}");
                 }
             }
@@ -482,3 +488,5 @@ class Program
         }
     }
 }
+
+
