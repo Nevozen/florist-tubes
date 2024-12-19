@@ -3,6 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+/*
+Kelas SI-48-04
+Kelompok 1
+Anggota Kelompok:
+1. Radiv Lazuardi Aziz (102022430052)
+2. Lola Larasati Br Pasaribu (102022400218)
+3. Sabila Martasyah (102022430005)
+4. Caesya Rachma Arizna (102022400187)
+5. Zhafir Akram Putra Wardana (102022400148)
+*/
+
 class Program
 {
     static void Main(string[] args)
