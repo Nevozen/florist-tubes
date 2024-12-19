@@ -143,7 +143,7 @@ class Program
                                     }
                                 }
                             }
-                            Console.WriteLine("\nTekan Enter untuk kembali ke menu admin..");
+                            Console.WriteLine("\nTekan enter untuk kembali ke menu admin..");
                             Console.ReadKey();
                             break;
 
@@ -164,7 +164,7 @@ class Program
                                 command_0401.ExecuteNonQuery();
                             }
                             Console.WriteLine("\nBunga berhasil ditambahkan!");
-                            Console.WriteLine("\nTekan Enter untuk kembali ke menu admin..");
+                            Console.WriteLine("\nTekan enter untuk kembali ke menu admin..");
                             Console.ReadKey();
                             break;
 
@@ -192,12 +192,12 @@ class Program
                                 if (command_0401.ExecuteNonQuery() > 0)
                                 {
                                     Console.WriteLine("\nHarga berhasil diperbarui!");
-                                    Console.WriteLine("Tekan Apapun untuk Kembali..");
+                                    Console.WriteLine("Tekan enter untuk Kembali..");
                                 }
                                 else
                                 {
                                     Console.WriteLine("\nID tidak ditemukan.");
-                                    Console.WriteLine("Tekan Apapun untuk Kembali..");
+                                    Console.WriteLine("Tekan enter untuk Kembali..");
                                 }
                                 Console.ReadKey();
                             }
@@ -225,7 +225,7 @@ class Program
                                     Console.WriteLine("ID tidak ditemukan.");
                                 }
                             }
-                            Console.WriteLine("Tekan Apapun untuk Kembali..");
+                            Console.WriteLine("Tekan enter untuk Kembali..");
                             Console.ReadKey();
                             break;
 
@@ -253,7 +253,7 @@ class Program
                                     }
                                 }
                             }
-                            Console.WriteLine("Tekan Apapun untuk Kembali..");
+                            Console.WriteLine("Tekan enter untuk Kembali..");
                             Console.ReadKey();
                             break;
 
@@ -278,7 +278,7 @@ class Program
                                     }
                                 }
                             }
-                            Console.WriteLine("Tekan Apapun untuk Kembali..");
+                            Console.WriteLine("Tekan enter untuk Kembali..");
                             Console.ReadKey();
                             break;
 
@@ -317,10 +317,9 @@ class Program
                                     }
                                 }
                             }
-                            Console.WriteLine("\nTekan Enter untuk kembali ke menu admin..");
+                            Console.WriteLine("\nTekan enter untuk kembali ke menu admin..");
                             Console.ReadKey();
                             break;
-
 
                         case 0:
                             Console.WriteLine("\nKembali ke menu sebelumnya..");
@@ -328,7 +327,7 @@ class Program
 
                         default:
                             Console.WriteLine("\nPilihan tidak valid. Silakan coba lagi.");
-                            Console.WriteLine("\nTekan Enter untuk kembali ke menu admin..");
+                            Console.WriteLine("\nTekan enter untuk kembali ke menu admin..");
                             Console.ReadKey();
                             break;
                     }
@@ -381,7 +380,7 @@ class Program
                 Console.Write("Masukkan ID Bunga yang ingin dibeli: ");
                 if (!int.TryParse(Console.ReadLine(), out int flowerId_0401))
                 {
-                    Console.WriteLine("ID tidak valid. Tekan Enter untuk mencoba lagi..");
+                    Console.WriteLine("ID tidak valid. Tekan enter untuk mencoba lagi..");
                     Console.ReadKey();
                     continue;
                 }
@@ -404,7 +403,7 @@ class Program
 
                 if (flowerName_0401 == null)
                 {
-                    Console.WriteLine("ID bunga tidak ditemukan. Tekan Enter untuk mencoba lagi..");
+                    Console.WriteLine("ID bunga tidak ditemukan. Tekan enter untuk mencoba lagi..");
                     Console.ReadKey();
                     continue;
                 }
@@ -412,7 +411,7 @@ class Program
                 Console.Write("Masukkan jumlah: ");
                 if (!int.TryParse(Console.ReadLine(), out int quantity_0401) || quantity_0401 <= 0)
                 {
-                    Console.WriteLine("Jumlah tidak valid. Tekan Enter untuk mencoba lagi..");
+                    Console.WriteLine("Jumlah tidak valid. Tekan enter untuk mencoba lagi..");
                     Console.ReadKey();
                     continue;
                 }
@@ -422,10 +421,25 @@ class Program
                 Console.WriteLine($"Bunga {flowerName_0401} sebanyak {quantity_0401} berhasil ditambahkan ke keranjang.");
 
                 Console.WriteLine("\n========== Keranjang Belanja ==========");
+                // Perhitungan Total Harga
+                decimal totalPrice_0401 = 0;
+
                 foreach (var item in cart_0401)
                 {
                     Console.WriteLine($"- {item.FlowerName_0401}, Jumlah: {item.Quantity_0401}, Subtotal: Rp {item.Subtotal_0401}");
+                    totalPrice_0401 += item.Subtotal_0401;
                 }
+
+                // Hitung PPN
+                decimal tax_0401 = totalPrice_0401 * 0.11m;
+                decimal finalTotalPrice_0401 = totalPrice_0401 + tax_0401;
+
+                // Tampilkan rincian harga
+                Console.WriteLine($"\nSubtotal: Rp {totalPrice_0401:F2}");
+                Console.WriteLine($"PPN 11%: Rp {tax_0401:F2}");
+                Console.WriteLine($"Total Harga (termasuk PPN): Rp {finalTotalPrice_0401:F2}");
+
+
 
                 Console.Write("\nIngin menambahkan bunga lain? (y/n): ");
                 string addMore_0401 = Console.ReadLine()?.ToLower();
@@ -448,8 +462,16 @@ class Program
                     totalPrice_0401 += item.Subtotal_0401;
                 }
 
-                Console.WriteLine($"Total Harga: Rp {totalPrice_0401}");
+                // Hitung PPN
+                decimal tax_0401 = totalPrice_0401 * 0.11m;
+                decimal finalTotalPrice_0401 = totalPrice_0401 + tax_0401;
+
+                // Tampilkan rincian harga
+                Console.WriteLine($"\nSubtotal: Rp {totalPrice_0401:F2}");
+                Console.WriteLine($"PPN 11%: Rp {tax_0401:F2}");
+                Console.WriteLine($"Total Harga (termasuk PPN): Rp {finalTotalPrice_0401:F2}");
                 Console.Write("\nApakah keranjang sudah sesuai? (y/n): ");
+
                 string confirmation_0401 = Console.ReadLine()?.ToLower();
 
                 if (confirmation_0401 == "y")
@@ -501,11 +523,12 @@ class Program
                     {
                         command_0401.Parameters.AddWithValue("@name", customerName_0401);
                         command_0401.Parameters.AddWithValue("@address", customerAddress_0401);
-                        command_0401.Parameters.AddWithValue("@totalPrice", finalTotalPrice_0401);
+                        command_0401.Parameters.AddWithValue("@totalPrice", finalTotalPrice_0401); // Gunakan total harga termasuk PPN
                         command_0401.ExecuteNonQuery();
                     }
 
-                    
+
+
                     using (var command_0401 = new MySqlCommand("SELECT LAST_INSERT_ID()", connection_0401, transaction_0401))
                     {
                         orderId_0401 = Convert.ToInt64(command_0401.ExecuteScalar());
@@ -527,7 +550,7 @@ class Program
                     transaction_0401.Commit();
                     Console.WriteLine("\nPesanan berhasil dibuat! Terima kasih telah berbelanja.");
                     Console.WriteLine();
-                    Console.WriteLine("Tekan Apapun untuk Kembali..");
+                    Console.WriteLine("Tekan enter untuk Kembali..");
                     Console.ReadKey();
                 }
                 catch (MySqlException ex) // Jika koneksi ke database mati
